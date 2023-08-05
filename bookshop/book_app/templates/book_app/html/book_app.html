@@ -1,0 +1,11 @@
+{% extends 'book_app/html/base.html'%}
+
+{% block title %}Библиотека книг{% endblock %}
+
+{% block content %}
+    <ul>
+        {% for book in book %}
+            <li>{{ book }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

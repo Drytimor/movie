@@ -16,12 +16,10 @@
     {% endfor %}
     </ul>
 
-<h3> Средний бюджет {{ agg.budget__avg }} </h3>
+<h3> Средний бюджет {{ agg.budget__avg | floatformat:"0" }} </h3>
 <h3> Максимальный рейтинг {{ agg.rating__max }} </h3>
 <h3> Минимальный рейтинг {{ agg.rating__min }} </h3>
 <h3> Всего фильмов {{ agg.id__count }} </h3>
-
-
 
 {% endblock %}
 

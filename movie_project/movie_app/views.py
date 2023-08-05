@@ -5,14 +5,8 @@ from django.db.models import F, Max, Min, Sum, Avg, Count, Value
 
 
 def show_all_movie(requests):
-    # movies = Movie.objects.order_by(F('year').desc(nulls_last=True))
-    rating = 'rating'
-    movies = Movie.objects.annotate(
-        true_field=Value(True),
-        false_field=Value(False),
-        annot_field=F('rating') * F('year'),
-    )
-    agg = movies.aggregate(Avg('budget'), Min(rating), Max(rating), Count('id'))
+    movies = Movie.objects.order_by(F('rating').desc(nulls_last=True), 'year')
+    agg = movies.aggregate(Avg('budget'), Min('rating'), Max('rating'), Count('id'))
     for movie in movies:
         movie.save()
     return render(requests, 'movie_app/html/all_movies.html', {
