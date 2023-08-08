@@ -1,8 +1,12 @@
 from django.contrib import admin
 from django.db.models import QuerySet
-from .models import Movie
+from .models import Movie, Director, Actor, DressingRoom
 
 # Register your models here.
+
+admin.site.register(Director)
+admin.site.register(Actor)
+
 
 class FilterRating(admin.SimpleListFilter):
     title = 'Фильтр по рейтингу'
@@ -18,26 +22,31 @@ class FilterRating(admin.SimpleListFilter):
 
     def queryset(self, request, queryset: QuerySet):
         rating = self.value()
-        if rating == 'до 40':
-            return queryset.filter(rating__lt=40)
-        if rating == 'от 40 до 59':
-            return queryset.filter(rating__gte=40).filter(rating__lt=59)
-        if rating == 'от 60 до 79':
-            return queryset.filter(rating__gte=60).filter(rating__lt=79)
-        if rating == 'от 80':
-            return queryset.filter(rating__gte=80)
+        match rating:
+            case 'до 40':
+                return queryset.filter(rating__lt=40)
+            case 'от 40 до 59':
+                return queryset.filter(rating__gte=40).filter(rating__lt=59)
+            case 'от 60 до 79':
+                return queryset.filter(rating__gte=60).filter(rating__lt=79)
+            case 'от 80':
+                return queryset.filter(rating__gte=80)
 
+@admin.register(DressingRoom)
+class DressingAdmin(admin.ModelAdmin):
+    list_display = ['floor', 'number', 'actor']
 
 
 
 @admin.register(Movie)
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ['name', 'rating', 'year', 'currency', 'budget', 'rating_status']
-    list_editable = ['rating', 'year', 'currency']
+    list_display = ['name', 'rating', 'year', 'currency', 'director', 'rating_status']
+    list_editable = ['rating', 'year', 'currency', 'director']
     ordering = ['-rating']
     list_per_page = 5
     actions = ['set_dollars', 'set_rubles']
     search_fields = ['name__startswith', 'rating']
+    filter_horizontal = ['actors']
     list_filter = ['name', 'currency', FilterRating]
     exclude = ['slug']
 

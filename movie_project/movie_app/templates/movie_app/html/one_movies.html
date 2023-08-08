@@ -10,4 +10,18 @@
         <h3> Год {{ movie.year }} </h3>
         <h3> Бюджет {{ movie.budget }} </h3>
 
+    <hr>
+
+    <h3> Режиссер </h3>
+        <h4><a href="{{ movie.director.get_url }}"> {{ movie.director|default:'Неизвестно' }} </a></h4>
+
+    <hr>
+
+    <h3> В фильме снимались </h3>
+        {% for actor in movie.actors.all %}
+
+            <h4><a href="{{ actor.get_url }}"> {{ actor|default:'Неизвестно'}} </a></h4>
+
+        {% endfor %}
+
 {% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'movie_app/html/base.html' %}
+
+{% block title %} Актеры {% endblock %}
+
+{% block content %}
+  <h2> Список всех актеров </h2>
+  <ul>
+    {% for actor in actor %}
+      <li><a href="{{ actor.get_url }}"> {{ actor }} </a></li>
+    {% endfor %}
+  </ul>
+
+{% endblock %}
