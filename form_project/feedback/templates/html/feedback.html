@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title> Отзывы </title>
+    <link rel="stylesheet" href="{% static  'feedback/css/feedback.css' %}">
+</head>
+<body>
+    <h2>Оставьте отзыв</h2>
+    <form action="/" method="post" >
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div class="form-style {% if field.errors %} errors {% endif %}">
+                {{ field.label_tag }}
+                {{ field.errors }}
+                {{ field }}
+            </div>
+        {% endfor %}
+
+        <button>Отправить</button>
+    </form>
+</body>
+</html>
