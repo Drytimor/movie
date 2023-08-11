@@ -1,0 +1,25 @@
+{% extends 'html/base.html' %}
+
+{% block title %}Отзыв {{one_feedback.name}} {{one_feedback.surname}}{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+ <ul class="timeline">
+ <li>
+ <div class="timeline-badge"><i class="glyphicon glyphicon-check"></i></div>
+ <div class="timeline-panel">
+ <div class="timeline-heading">
+ <h4 class="timeline-title">{{ one_feedback.name }} {{ one_feedback.surname }}</h4>
+ <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> Рейтинг {{ one_feedback.rating }} </small></p>
+ </div>
+ <div class="timeline-body">
+ <p> {{ one_feedback.feedback }} </p>
+ </div>
+ </div>
+ </li>
+ </ul>
+</div>
+
+{% endblock %}

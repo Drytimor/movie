@@ -1,51 +1,60 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Movie, Director, Actor
 from django.db.models import F, Max, Min, Sum, Avg, Count, Value
+from django.views.generic import ListView
+from django.views import View
+from django.views.generic.base import TemplateView
 
 
+class ShowAllMovies(ListView):
+
+    model = Movie
+    template_name = 'movie_app/html/all_movies.html'
+    context_object_name = 'movies'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['agg'] = Movie.objects.aggregate(Avg('budget'), Min('rating'), Max('rating'), Count('id'))
+        return context
 
 
-def show_all_movie(requests):
-    movies = Movie.objects.order_by(F('rating').desc(nulls_last=True), 'year')
-    agg = movies.aggregate(Avg('budget'), Min('rating'), Max('rating'), Count('id'))
-    # for movie in movies:
-    #     movie.save()
-    return render(requests, 'movie_app/html/all_movies.html', {
-        'movies': movies,
-        'agg': agg
-    })
+class ShowOneMovie(TemplateView):
+    template_name = 'movie_app/html/one_movies.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['movie'] = Movie.objects.get(slug=kwargs['slug_movie'])
+        return context
+
+class ShowAllDirector(ListView):
+
+    model = Director
+    template_name = 'movie_app/html/all_director.html'
+    context_object_name = 'director'
+
+class ShowOneDirector(TemplateView):
+
+    template_name = 'movie_app/html/one_director.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['director'] = Director.objects.get(id=kwargs['id_director'])
+        return context
+
+class ShowAllActor(ListView):
+
+    model = Actor
+    template_name = 'movie_app/html/all_actor.html'
+    context_object_name = 'actor'
+
+class ShowOneActor(TemplateView):
+
+    template_name = 'movie_app/html/one_actor.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['actor'] = Actor.objects.get(id=kwargs['id_actor'])
+        return context
 
 
-def show_one_movie(requests, slug_movie):
-    movie = get_object_or_404(Movie, slug=slug_movie)
-    return render(requests, 'movie_app/html/one_movies.html', {
-        'movie': movie
-    })
-
-
-def show_all_director(requests):
-    director = Director.objects.order_by('first_name', 'last_name')
-    return render(requests, 'movie_app/html/all_director.html', {
-        'director': director
-    })
-
-def show_one_director(requests, id_director):
-    director = get_object_or_404(Director, id=id_director)
-    return render(requests, 'movie_app/html/one_director.html', {
-        'director': director
-    })
-
-
-def show_all_actor(requests):
-    actor = Actor.objects.order_by('first_name', 'last_name')
-    return render(requests, 'movie_app/html/all_actor.html', {
-        'actor': actor
-    })
-
-
-def show_one_actor(requests, id_actor):
-    actor = get_object_or_404(Actor, id=id_actor)
-    return render(requests, 'movie_app/html/one_actor.html', {
-        'actor': actor
-    })
 
